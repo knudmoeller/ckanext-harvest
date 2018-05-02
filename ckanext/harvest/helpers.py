@@ -1,4 +1,5 @@
 
+from logging import getLogger
 from pylons import request
 from ckan import logic
 from ckan import model
@@ -8,6 +9,9 @@ import ckan.plugins as p
 from ckanext.harvest.model import UPDATE_FREQUENCIES
 from ckanext.harvest.plugin import DATASET_TYPE_NAME
 from ckanext.harvest.interfaces import IHarvester
+from ckan.logic import get_action
+
+log = getLogger(__name__)
 
 def package_list_for_source(source_id):
     '''
@@ -109,4 +113,18 @@ def harvest_source_extra_fields():
             continue
         fields[harvester.info()['name']] = harvester.extra_schema().keys()
     return fields
+
+def test_last_error_free_job(source_id):
+    from ckanext.harvest.model import HarvestJob
+    from ckanext.harvest.harvesters.base import HarvesterBase
+
+    context = {'model': model, 'user': p.toolkit.c.user or p.toolkit.c.author}
+    jobs = get_action('harvest_job_list')(context, {'source_id': source_id})
+    lef = None
+    if (len(jobs) > 0):
+        job_dict = jobs[0]
+        job_obj = HarvestJob.get(job_dict['id'])
+        lef = HarvesterBase.last_error_free_job(job_obj)
+
+    return lef
 

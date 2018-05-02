@@ -196,6 +196,16 @@ class ViewController(BaseController):
         except p.toolkit.NotAuthorized:
             abort(401,self.not_auth_message)
                 
+    def test_lef(self, id):
+        from ckanext.harvest import helpers as harvest_helpers
+
+        job = harvest_helpers.test_last_error_free_job(id)
+        log.info("Last error free job: {}".format(job))
+
+        h.flash_success("Last error free job: {}".format(job))
+        h.redirect_to(h.url_for('{0}_admin'.format(DATASET_TYPE_NAME), id=id))
+
+
     def abort_job(self, source, id):
         try:
             context = {'model':model, 'user':c.user}

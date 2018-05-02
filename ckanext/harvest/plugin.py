@@ -237,6 +237,8 @@ class Harvest(p.SingletonPlugin, DefaultDatasetForm, DefaultTranslation):
         map.connect('{0}_about'.format(DATASET_TYPE_NAME), '/' + DATASET_TYPE_NAME + '/about/:id', controller=controller, action='about')
         map.connect('{0}_clear'.format(DATASET_TYPE_NAME), '/' + DATASET_TYPE_NAME + '/clear/:id', controller=controller, action='clear')
 
+        map.connect('harvest_lef_test', '/' + DATASET_TYPE_NAME + '/admin/:id/test_lef', controller=controller, action='test_lef')
+
         map.connect('harvest_job_list', '/' + DATASET_TYPE_NAME + '/{source}/job', controller=controller, action='list_jobs')
         map.connect('harvest_job_show_last', '/' + DATASET_TYPE_NAME + '/{source}/job/last', controller=controller, action='show_last_job')
         map.connect('harvest_job_show', '/' + DATASET_TYPE_NAME + '/{source}/job/{id}', controller=controller, action='show_job')
@@ -293,6 +295,7 @@ class Harvest(p.SingletonPlugin, DefaultDatasetForm, DefaultTranslation):
                 'harvest_frequencies': harvest_helpers.harvest_frequencies,
                 'link_for_harvest_object': harvest_helpers.link_for_harvest_object,
                 'harvest_source_extra_fields': harvest_helpers.harvest_source_extra_fields,
+                'harvest_test_last_error_free_job': harvest_helpers.test_last_error_free_job
                 }
 
     def dataset_facets(self, facets_dict, package_type):
